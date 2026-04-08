@@ -378,10 +378,21 @@
     .stat-line { font-size: 1.1rem; margin-bottom: 10px; }
     .stat-line span { color: var(--accent); font-weight: bold; }
     
-    #wipe-save-btn {
-        background: var(--unaffordable); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: background 0.2s;
+    #wipe-save-btn, #manual-save-btn {
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 15px;
+        transition: background 0.2s;
+        border: none;
     }
+
+    #wipe-save-btn { background: var(--unaffordable); color: white; margin-left: 10px; }
     #wipe-save-btn:hover { background: #d32f2f; }
+
+    #manual-save-btn { background: var(--accent); color: var(--bg-color); }
+    #manual-save-btn:hover { background: #4fd1b5; }
 
 </style>
 </head>
@@ -450,6 +461,7 @@
                     
                     <h3 style="margin-top: 40px; margin-bottom: 15px; color: var(--unaffordable); border-top: 1px solid var(--border-color); padding-top: 20px;">Save Management</h3>
                     <p style="color: var(--text-dim); font-size: 0.9rem;">Warning: Wiping your save will reset all progress, achievements, and stats permanently.</p>
+                    <button id="manual-save-btn">Manual Save</button>
                     <button id="wipe-save-btn">Wipe Save</button>
                 </div>
             </div>
@@ -560,7 +572,20 @@
         return totalSPS;
     }
 
-    function saveGame() {
+    function showToast(message) {
+        let toast = document.createElement('div');
+        toast.className = 'notification';
+        toast.style.width = 'auto';
+        toast.style.minWidth = '150px';
+        toast.innerHTML = `<div style="text-align: center; width: 100%; font-weight: bold;">${message}</div>`;
+        notifContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    }
+
+    function saveGame(showNotification = false) {
         let data = {
             shapes: gameState.shapes, 
             totalShapes: gameState.totalShapes, 
@@ -572,6 +597,10 @@
         for (let key in buildings) data.b[key] = { c: buildings[key].count, r: buildings[key].revealed };
         for (let key in upgrades) data.u[key] = { b: upgrades[key].bought, r: upgrades[key].revealed };
         localStorage.setItem('shapeClickerSave', JSON.stringify(data));
+        
+        if (showNotification) {
+            showToast("Saved game");
+        }
     }
 
     function loadGame() {
@@ -677,6 +706,7 @@
         document.getElementById('sell-mode-btn').addEventListener('click', () => setShopMode('sell'));
         document.getElementById('bulk-1-btn').addEventListener('click', () => setBulk(1));
         document.getElementById('bulk-10-btn').addEventListener('click', () => setBulk(10));
+        document.getElementById('manual-save-btn').addEventListener('click', () => saveGame(true));
 
         setShopMode(gameState.shopMode);
         setBulk(gameState.bulkAmount);
@@ -862,7 +892,7 @@
         displayTimer += delta;
         if (displayTimer > 50) { updateUI(false); displayTimer = 0; }
         autoSaveTimer += delta;
-        if (autoSaveTimer >= 60000) { saveGame(); autoSaveTimer = 0; }
+        if (autoSaveTimer >= 60000) { saveGame(true); autoSaveTimer = 0; }
         requestAnimationFrame(gameLoop);
     }
 
