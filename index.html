@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shape Clicker Deluxe</title>
+<title>Shape Clicker</title>
+<link rel="icon" href="square.png" type="image/png">
 <style>
     :root {
         --bg-color: #0a192f;
@@ -13,12 +14,13 @@
         --text-dim: #8892b0;
         --accent: #64ffda;
         --unaffordable: #ef5350;
+        --sell-color: #f87171;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
     
     body {
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: var(--bg-color);
         color: var(--text-main);
         height: 100vh;
@@ -27,343 +29,471 @@
         overflow: hidden;
     }
 
-    /* Toggleable Glow */
-    body.no-glow * { box-shadow: none !important; text-shadow: none !important; }
+    /* Glow Disabling Logic */
+    body.no-glow * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
 
-    #left-panel { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-    #right-panel { width: 380px; background-color: var(--panel-bg); display: flex; flex-direction: column; border-left: 2px solid var(--border-color); z-index: 100; }
+    #left-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
 
-    #shapes-display { font-size: 3rem; font-weight: bold; text-shadow: 0 0 10px var(--accent); }
-    #sps-display { font-size: 1.2rem; color: var(--text-dim); margin-bottom: 30px; }
+    #divider { width: 2px; background-color: var(--border-color); height: 100%; }
+
+    #right-panel {
+        width: 400px;
+        background-color: var(--panel-bg);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        z-index: 100;
+    }
+
+    .panel-header {
+        text-align: center;
+        padding: 15px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border-bottom: 2px solid var(--border-color);
+        background: #0a192f;
+    }
+
+    #shapes-display {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+        text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+        z-index: 10;
+    }
+
+    #sps-display {
+        font-size: 1.2rem;
+        color: var(--text-dim);
+        margin-bottom: 40px;
+        z-index: 10;
+    }
 
     #main-button {
-        width: 160px; height: 160px; background-color: #1d4ed8;
-        border: 4px solid #60a5fa; border-radius: 15px;
+        width: 150px;
+        height: 150px;
+        background-color: #1d4ed8;
+        border: 4px solid #60a5fa;
+        border-radius: 10px;
         box-shadow: 0 0 25px rgba(37, 99, 235, 0.6);
-        cursor: pointer; transition: transform 0.05s; outline: none;
+        cursor: pointer;
+        transition: transform 0.05s ease, box-shadow 0.2s ease;
+        outline: none;
+        z-index: 10;
     }
-    #main-button:active { transform: scale(0.95); }
 
-    /* Falling Shapes */
-    .falling-shape { position: absolute; pointer-events: none; z-index: 5; top: -50px; }
+    #main-button:hover { box-shadow: 0 0 40px rgba(96, 165, 250, 0.8); }
+    #main-button:active { transform: scale(0.92); box-shadow: 0 0 15px rgba(37, 99, 235, 0.8); }
+
+    .falling-shape {
+        position: absolute;
+        pointer-events: none;
+        z-index: 5;
+        top: -50px;
+    }
+
     .shape-f-square { width: 30px; height: 30px; background: #3b82f6; border: 2px solid #60a5fa; }
     .shape-f-circle { width: 30px; height: 30px; background: #10b981; border: 2px solid #34d399; border-radius: 50%; }
-    .shape-f-triangle { width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-bottom: 30px solid #f59e0b; }
-
-    .particle { position: absolute; font-weight: bold; color: white; pointer-events: none; z-index: 100; }
-
-    #scroll-area { flex: 1; overflow-y: auto; padding: 15px; }
-    .item-card {
-        background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
-        padding: 12px; margin-bottom: 10px; border-radius: 8px; cursor: pointer;
-        display: flex; justify-content: space-between; align-items: center;
+    .shape-f-triangle {
+        width: 0; height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-bottom: 30px solid #f59e0b;
     }
-    .item-card:hover { background: rgba(255,255,255,0.08); }
-    .item-card.unaffordable { opacity: 0.5; cursor: not-allowed; }
+
+    .particle {
+        position: absolute;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: white;
+        pointer-events: none;
+        text-shadow: 1px 1px 2px black;
+        z-index: 100;
+    }
+
+    #scrollable-area { flex: 1; overflow-y: auto; padding: 10px; }
+    #scrollable-area::-webkit-scrollbar { width: 8px; }
+    #scrollable-area::-webkit-scrollbar-track { background: var(--panel-bg); }
+    #scrollable-area::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+    .section-title {
+        font-size: 1.1rem;
+        color: var(--text-dim);
+        margin: 15px 0 10px 5px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    #shop-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 10px 5px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .control-row { display: flex; gap: 5px; }
+
+    .mode-btn, .bulk-btn {
+        flex: 1; padding: 8px; background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border-color); color: var(--text-dim);
+        cursor: pointer; font-weight: bold; border-radius: 4px; transition: all 0.2s;
+    }
+
+    .mode-btn.active-buy { background: var(--accent); color: var(--bg-color); border-color: var(--accent); }
+    .mode-btn.active-sell { background: var(--sell-color); color: white; border-color: var(--sell-color); }
+    .bulk-btn.active { background: var(--text-main); color: var(--bg-color); }
+
+    .item-card {
+        display: none; align-items: center; background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-color); border-radius: 6px; padding: 10px;
+        margin-bottom: 8px; cursor: pointer; transition: background-color 0.2s, border-color 0.2s, box-shadow 0.3s;
+    }
+
+    .item-card:hover { background-color: rgba(255, 255, 255, 0.08); border-color: var(--text-dim); }
+    .item-card.unaffordable { cursor: not-allowed; opacity: 0.6; }
+
+    .item-icon-container {
+        width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
+        margin-right: 15px; background: rgba(0,0,0,0.2); border-radius: 4px; flex-shrink: 0;
+    }
+
+    .item-details { flex: 1; }
+    .item-name { font-weight: bold; font-size: 1.1rem; margin-bottom: 3px; }
+    .item-count { font-size: 1.5rem; font-weight: bold; color: var(--text-dim); opacity: 0.5; }
+
+    /* Icons */
+    .shape-line { width: 24px; height: 4px; background: #333; }
+    .shape-triangle { width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 24px solid orange; }
+    .shape-square { width: 20px; height: 20px; background: #3b82f6; }
+    .shape-cursor { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid #cbd5e1; transform: rotate(-45deg); }
+    .shape-star { width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 24px solid gold; position: relative; }
+    .shape-star:after { content: ''; position: absolute; top: 8px; left: -12px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 24px solid gold; }
+
+    #tooltip {
+        position: fixed; background: rgba(2, 12, 27, 0.95); color: var(--text-main);
+        border: 1px solid var(--accent); padding: 12px; border-radius: 6px;
+        pointer-events: none; z-index: 9999; max-width: 280px; display: none;
+    }
     
-    .item-info { display: flex; flex-direction: column; }
-    .item-name { font-weight: bold; font-size: 1.1rem; }
-    .item-cost { font-size: 0.9rem; color: var(--accent); }
-    .item-count { font-size: 1.8rem; font-weight: bold; opacity: 0.3; }
+    #tooltip.visible { display: block; }
 
-    /* Modal */
-    #menu-btn { position: absolute; top: 20px; right: 20px; padding: 8px 16px; background: transparent; border: 1px solid var(--accent); color: var(--accent); cursor: pointer; }
-    #modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
-    #modal-content { background: var(--panel-bg); width: 500px; padding: 25px; border-radius: 10px; border: 1px solid var(--border-color); }
-    .tab-content { margin-top: 20px; }
-    .setting-row { display: flex; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 5px; }
+    #menu-bar { position: absolute; top: 20px; right: 20px; z-index: 10; }
+    #menu-btn {
+        background: transparent; color: var(--accent); border: 1px solid var(--accent);
+        padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold;
+    }
 
-    #notif-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; }
-    .notif { background: var(--panel-bg); border: 1px solid var(--accent); padding: 10px 20px; margin-top: 5px; border-radius: 5px; animation: slide 0.3s; }
-    @keyframes slide { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    #modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 2000;
+    }
+    #modal-overlay.visible { display: flex; }
+
+    #modal-content {
+        background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px;
+        width: 650px; max-height: 85vh; display: flex; flex-direction: column;
+    }
+
+    #modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border-color); }
+    #modal-close { background: none; border: none; color: var(--text-dim); font-size: 1.5rem; cursor: pointer; }
+    #modal-tabs { display: flex; border-bottom: 1px solid var(--border-color); }
+
+    .tab-btn { flex: 1; background: none; border: none; color: var(--text-dim); padding: 12px; cursor: pointer; font-weight: bold; }
+    .tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+    #modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+    .setting-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 4px; }
+
+    #notification-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column-reverse; gap: 10px; z-index: 9999; pointer-events: none; }
+    .notification { background: rgba(2, 12, 27, 0.95); border: 1px solid var(--accent); padding: 15px; border-radius: 8px; display: flex; align-items: center; width: 320px; animation: slideIn 0.3s ease-out forwards; transition: opacity 0.5s ease-out; }
+    .notification.hide { opacity: 0; }
+
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 </style>
 </head>
 <body>
 
-<div id="left-panel">
-    <div id="shapes-display">0 Shapes</div>
-    <div id="sps-display">0 shapes/sec</div>
-    <button id="main-button"></button>
-    <button id="menu-btn">Settings / Stats</button>
-</div>
-
-<div id="right-panel">
-    <div style="padding: 15px; border-bottom: 1px solid var(--border-color); font-weight: bold;">SHOP</div>
-    <div id="scroll-area">
-        <div id="upgrades-container"></div>
-        <div id="buildings-container"></div>
+    <div id="left-panel">
+        <div id="shapes-display">0 Shapes</div>
+        <div id="sps-display">0 shapes/sec</div>
+        <button id="main-button"></button>
+        <div id="menu-bar"><button id="menu-btn">Menu</button></div>
     </div>
-</div>
 
-<div id="modal">
-    <div id="modal-content">
-        <h2 style="color: var(--accent)">Settings & Stats</h2>
-        <div class="tab-content">
-            <h3 style="margin-bottom: 10px;">Preferences</h3>
-            <div class="setting-row">
-                <span>Enable Falling Shapes</span>
-                <input type="checkbox" id="set-particles" checked>
+    <div id="divider"></div>
+
+    <div id="right-panel">
+        <div class="panel-header">Shop</div>
+        <div id="scrollable-area">
+            <div id="shop-controls">
+                <div class="control-row">
+                    <button id="buy-mode-btn" class="mode-btn active-buy">Buy</button>
+                    <button id="sell-mode-btn" class="mode-btn">Sell</button>
+                </div>
+                <div class="control-row">
+                    <button id="bulk-1-btn" class="bulk-btn active">1x</button>
+                    <button id="bulk-10-btn" class="bulk-btn">10x</button>
+                </div>
             </div>
-            <div class="setting-row">
-                <span>Enable Glow Effects</span>
-                <input type="checkbox" id="set-glow" checked>
+            <div class="section-title">Upgrades</div>
+            <div id="upgrades-container"></div>
+            <div class="section-title" style="margin-top: 25px;">Buildings</div>
+            <div id="buildings-container"></div>
+        </div>
+    </div>
+
+    <div id="tooltip">
+        <div id="tt-name" style="font-weight:bold; color:var(--accent)"></div>
+        <div id="tt-cost"></div>
+        <div id="tt-desc"></div>
+    </div>
+
+    <div id="modal-overlay">
+        <div id="modal-content">
+            <div id="modal-header"><h2>Game Menu</h2><button id="modal-close">&times;</button></div>
+            <div id="modal-tabs">
+                <button class="tab-btn active" data-tab="upgrades-tab">Upgrades</button>
+                <button class="tab-btn" data-tab="stats-tab">Stats & Settings</button>
             </div>
-            <h3 style="margin-top: 20px; margin-bottom: 10px;">Statistics</h3>
-            <div id="stats-area"></div>
-            <div style="margin-top: 20px; display: flex; gap: 10px;">
-                <button onclick="saveGame(false)" style="flex: 1; padding: 10px; background: var(--accent); color: #000; border: none; cursor: pointer;">Manual Save</button>
-                <button onclick="wipeSave()" style="flex: 1; padding: 10px; background: var(--unaffordable); color: #fff; border: none; cursor: pointer;">Wipe Progress</button>
+            <div id="modal-body">
+                <div id="upgrades-tab" class="tab-content"></div>
+                <div id="stats-tab" class="tab-content" style="display:none;">
+                    <h3 style="color: var(--accent); margin-bottom: 10px;">Settings</h3>
+                    <div class="setting-row">
+                        <span>Falling Shapes</span>
+                        <input type="checkbox" id="setting-particles" checked>
+                    </div>
+                    <div class="setting-row">
+                        <span>Visual Glow Effects</span>
+                        <input type="checkbox" id="setting-glow" checked>
+                    </div>
+
+                    <h3 style="color: var(--accent); margin-top: 20px; margin-bottom: 10px;">Save Management</h3>
+                    <button id="manual-save-btn" style="padding:10px; background:var(--accent); color:var(--bg-color); border:none; border-radius:4px; cursor:pointer;">Manual Save</button>
+                    <button id="wipe-save-btn" style="padding:10px; background:var(--unaffordable); color:white; border:none; border-radius:4px; cursor:pointer; margin-left:10px;">Wipe Save</button>
+                    
+                    <h3 style="color: var(--accent); margin-top: 20px; margin-bottom: 10px;">Stats</h3>
+                    <div id="stats-container"></div>
+                </div>
             </div>
         </div>
-        <button onclick="closeModal()" style="margin-top: 20px; width: 100%; padding: 10px; background: #334155; color: #fff; border: none; cursor: pointer;">Close</button>
     </div>
-</div>
 
-<div id="notif-container"></div>
+    <div id="notification-container"></div>
 
 <script>
-    // CORE GAME STATE - Everything in one object for easy saving
-    let state = {
-        shapes: 0,
-        totalShapes: 0,
-        clicks: 0,
-        buildings: {
-            line: { count: 0, baseCost: 15, prod: 0.2, name: 'Line' },
-            triangle: { count: 0, baseCost: 100, prod: 1, name: 'Triangle' },
-            square: { count: 0, baseCost: 1100, prod: 8, name: 'Square' }
-        },
-        upgrades: {
-            megaClick: { bought: false, cost: 500, name: 'Mega Click', desc: 'Clicks are 5x stronger' }
-        },
-        settings: {
-            particles: true,
-            glow: true
-        }
+    const gameState = { 
+        shapes: 0, totalShapes: 0, clicks: 0,
+        shopMode: 'buy', bulkAmount: 1,
+        settings: { particles: true, glow: true }
     };
 
     let autoSpawnBuffer = 0;
-    let clickParticleCount = 0;
-    const MAX_CLICK_PARTICLES = 5;
+    let lastAutoSpawnTime = 0;
+    let activeClickParticles = 0;
 
-    // --- SAVING LOGIC ---
-    function saveGame(quiet = true) {
-        localStorage.setItem('shapeClickerSave_v2', JSON.stringify(state));
-        if (!quiet) notify("Game Saved!");
-    }
+    const buildings = {
+        line: { id: 'line', name: 'Line', baseCost: 25, prod: 0.3, count: 0, iconClass: 'shape-line', revealed: false },
+        triangle: { id: 'triangle', name: 'Triangle', baseCost: 150, prod: 1.5, count: 0, iconClass: 'shape-triangle', revealed: false },
+        square: { id: 'square', name: 'Square', baseCost: 1100, prod: 6, count: 0, iconClass: 'shape-square', revealed: false }
+    };
 
-    function loadGame() {
-        const saved = localStorage.getItem('shapeClickerSave_v2');
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            // Merge saved data into state to handle potential game updates
-            state = { ...state, ...parsed };
-            // Apply settings immediately
-            document.getElementById('set-particles').checked = state.settings.particles;
-            document.getElementById('set-glow').checked = state.settings.glow;
-            applyGlow(state.settings.glow);
-        }
-        renderShop();
-    }
+    const upgrades = {
+        dup: { id: 'dup', type: 'click', name: 'Duplicator', cost: 200, reqBuilding: 'line', reqCount: 3, desc: 'Double click output', bought: false, revealed: false }
+    };
 
-    function wipeSave() {
-        if (confirm("Are you sure? This deletes ALL shapes forever!")) {
-            localStorage.removeItem('shapeClickerSave_v2');
-            location.reload();
-        }
-    }
+    const shapesDisplay = document.getElementById('shapes-display');
+    const spsDisplay = document.getElementById('sps-display');
+    const mainBtn = document.getElementById('main-button');
+    const tooltip = document.getElementById('tooltip');
+    const notifContainer = document.getElementById('notification-container');
 
-    // --- UI & NOTIFICATIONS ---
-    function notify(msg) {
-        const n = document.createElement('div'); n.className = 'notif'; n.innerText = msg;
-        document.getElementById('notif-container').appendChild(n);
-        setTimeout(() => n.remove(), 3000);
-    }
+    function format(n) { return Math.floor(n).toLocaleString(); }
 
-    function applyGlow(enabled) {
-        document.body.classList.toggle('no-glow', !enabled);
-    }
-
-    function updateStats() {
-        document.getElementById('stats-area').innerHTML = `
-            <p>Total Shapes Produced: ${Math.floor(state.totalShapes)}</p>
-            <p>Total Button Clicks: ${state.clicks}</p>
-        `;
-    }
-
-    // --- GAMEPLAY ---
     function getSPS() {
-        let sps = 0;
-        for (let b in state.buildings) sps += state.buildings[b].count * state.buildings[b].prod;
-        return sps;
+        let total = 0;
+        for (let k in buildings) total += buildings[k].prod * buildings[k].count;
+        return total;
     }
 
-    function getClickPower() {
-        return state.upgrades.megaClick.bought ? 5 : 1;
+    function showToast(msg) {
+        let t = document.createElement('div'); t.className = 'notification';
+        t.innerHTML = `<div style="text-align:center;width:100%">${msg}</div>`;
+        notifContainer.appendChild(t);
+        setTimeout(() => { t.classList.add('hide'); setTimeout(() => t.remove(), 500); }, 3000);
     }
 
-    function spawnShape() {
-        if (!state.settings.particles) return;
-        const types = ['square', 'circle', 'triangle'];
+    function spawnFallingShape() {
+        if (!gameState.settings.particles) return;
         const el = document.createElement('div');
-        el.className = `falling-shape shape-f-${types[Math.floor(Math.random()*3)]}`;
-        el.style.left = Math.random() * window.innerWidth + 'px';
+        const types = ['square', 'circle', 'triangle'];
+        el.className = `falling-shape shape-f-${types[Math.floor(Math.random() * 3)]}`;
+        el.style.left = (Math.random() * window.innerWidth) + 'px';
         document.body.appendChild(el);
 
-        let y = -50, rot = 0, speed = 3 + Math.random() * 3;
-        function fall() {
+        let y = -50, rot = 0;
+        const speed = 3 + Math.random() * 4;
+        function anim() {
             y += speed; rot += 0.75;
             el.style.transform = `translateY(${y}px) rotate(${rot}deg)`;
-            if (y < window.innerHeight + 50) requestAnimationFrame(fall);
-            else el.remove();
-        }
-        requestAnimationFrame(fall);
-    }
-
-    function createClickParticle(x, y, amt) {
-        if (clickParticleCount >= MAX_CLICK_PARTICLES) return;
-        clickParticleCount++;
-        
-        const p = document.createElement('div');
-        p.className = 'particle'; p.innerText = `+${amt}`;
-        p.style.left = x + 'px'; p.style.top = y + 'px';
-        document.body.appendChild(p);
-
-        let op = 1, py = y;
-        function anim() {
-            op -= 0.02; py -= 1;
-            p.style.opacity = op; p.style.top = py + 'px';
-            if (op > 0) requestAnimationFrame(anim);
-            else { p.remove(); clickParticleCount--; }
+            if (y < window.innerHeight + 50) requestAnimationFrame(anim); else el.remove();
         }
         requestAnimationFrame(anim);
     }
 
-    // --- SHOP LOGIC ---
-    function renderShop() {
-        const bContainer = document.getElementById('buildings-container');
-        bContainer.innerHTML = '';
-        for (let id in state.buildings) {
-            const b = state.buildings[id];
-            const cost = Math.floor(b.baseCost * Math.pow(1.15, b.count));
-            const card = document.createElement('div');
-            card.className = `item-card ${state.shapes < cost ? 'unaffordable' : ''}`;
-            card.innerHTML = `
-                <div class="item-info">
-                    <span class="item-name">${b.name}</span>
-                    <span class="item-cost">Cost: ${cost}</span>
-                </div>
-                <div class="item-count">${b.count}</div>
-            `;
-            card.onclick = () => buyBuilding(id);
-            bContainer.appendChild(card);
-        }
+    function createClickParticle(x, y, amt) {
+        if (activeClickParticles >= 5) return;
+        activeClickParticles++;
 
-        const uContainer = document.getElementById('upgrades-container');
-        uContainer.innerHTML = '';
-        for (let id in state.upgrades) {
-            const u = state.upgrades[id];
-            if (u.bought) continue;
-            const card = document.createElement('div');
-            card.className = `item-card ${state.shapes < u.cost ? 'unaffordable' : ''}`;
-            card.innerHTML = `
-                <div class="item-info">
-                    <span class="item-name">${u.name}</span>
-                    <span class="item-cost">Cost: ${u.cost}</span>
-                    <small>${u.desc}</small>
-                </div>
-            `;
-            card.onclick = () => buyUpgrade(id);
-            uContainer.appendChild(card);
+        let el = document.createElement('div');
+        el.className = 'particle'; el.innerText = '+' + amt;
+        el.style.left = x + 'px'; el.style.top = y + 'px';
+        document.body.appendChild(el);
+
+        let vy = -5, op = 1;
+        function anim() {
+            vy += 0.2; y += vy; op -= 0.02;
+            el.style.top = y + 'px'; el.style.opacity = op;
+            if (op > 0) requestAnimationFrame(anim); 
+            else { el.remove(); activeClickParticles--; }
         }
+        anim();
     }
 
-    function buyBuilding(id) {
-        const b = state.buildings[id];
-        const cost = Math.floor(b.baseCost * Math.pow(1.15, b.count));
-        if (state.shapes >= cost) {
-            state.shapes -= cost;
-            b.count++;
-            renderShop();
-            saveGame();
-        }
-    }
+    mainBtn.addEventListener('mousedown', (e) => {
+        let power = upgrades.dup.bought ? 2 : 1;
+        gameState.shapes += power; gameState.totalShapes += power; gameState.clicks++;
+        if (gameState.settings.particles) spawnFallingShape();
+        createClickParticle(e.clientX, e.clientY, power);
+        updateUI();
+    });
 
-    function buyUpgrade(id) {
-        const u = state.upgrades[id];
-        if (state.shapes >= u.cost) {
-            state.shapes -= u.cost;
-            u.bought = true;
-            renderShop();
-            saveGame();
-        }
-    }
+    document.getElementById('setting-particles').addEventListener('change', (e) => {
+        gameState.settings.particles = e.target.checked;
+        saveGame(true);
+    });
 
-    // --- EVENT LISTENERS ---
-    document.getElementById('main-button').onmousedown = (e) => {
-        const pwr = getClickPower();
-        state.shapes += pwr;
-        state.totalShapes += pwr;
-        state.clicks++;
-        spawnShape();
-        createClickParticle(e.clientX, e.clientY, pwr);
-        renderShop();
-    };
+    document.getElementById('setting-glow').addEventListener('change', (e) => {
+        gameState.settings.glow = e.target.checked;
+        document.body.classList.toggle('no-glow', !gameState.settings.glow);
+        saveGame(true);
+    });
 
-    document.getElementById('menu-btn').onclick = () => {
-        updateStats();
-        document.getElementById('modal').style.display = 'flex';
-    };
-
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
-    document.getElementById('set-particles').onchange = (e) => {
-        state.settings.particles = e.target.checked;
-        saveGame();
-    };
-
-    document.getElementById('set-glow').onchange = (e) => {
-        state.settings.glow = e.target.checked;
-        applyGlow(state.settings.glow);
-        saveGame();
-    };
-
-    // --- MAIN LOOP ---
-    let lastTime = performance.now();
-    let autoSaveTicker = 0;
-
-    function loop(time) {
-        const dt = time - lastTime; lastTime = time;
-        const sps = getSPS();
+    // FIXED: Bundles building counts and upgrade status into the save
+    function saveGame(quiet = false) {
+        const fullSave = {
+            gameState: gameState,
+            buildingCounts: {},
+            upgradeStatus: {}
+        };
+        for (let k in buildings) fullSave.buildingCounts[k] = buildings[k].count;
+        for (let k in upgrades) fullSave.upgradeStatus[k] = upgrades[k].bought;
         
+        localStorage.setItem('shapeSave', JSON.stringify(fullSave));
+        if (!quiet) showToast("Saved game");
+    }
+
+    // FIXED: Distributes saved data back to buildings/upgrades objects
+    function loadGame() {
+        let s = localStorage.getItem('shapeSave');
+        if (s) {
+            const fullSave = JSON.parse(s);
+            Object.assign(gameState, fullSave.gameState);
+            
+            if (fullSave.buildingCounts) {
+                for (let k in fullSave.buildingCounts) {
+                    if (buildings[k]) buildings[k].count = fullSave.buildingCounts[k];
+                }
+            }
+            if (fullSave.upgradeStatus) {
+                for (let k in fullSave.upgradeStatus) {
+                    if (upgrades[k]) upgrades[k].bought = fullSave.upgradeStatus[k];
+                }
+            }
+
+            document.getElementById('setting-particles').checked = gameState.settings.particles;
+            document.getElementById('setting-glow').checked = gameState.settings.glow;
+            document.body.classList.toggle('no-glow', !gameState.settings.glow);
+        }
+    }
+
+    function initUI() {
+        for (let k in buildings) {
+            let b = buildings[k];
+            let el = document.createElement('div'); el.className = 'item-card';
+            el.innerHTML = `<div class="item-icon-container"><div class="${b.iconClass}"></div></div><div class="item-details"><div class="item-name">${b.name}</div><div class="item-cost">Cost: <span>${b.baseCost}</span></div></div><div class="item-count">0</div>`;
+            el.onclick = () => {
+                let cost = Math.floor(b.baseCost * Math.pow(1.15, b.count));
+                if (gameState.shapes >= cost) { 
+                    gameState.shapes -= cost; 
+                    b.count++; 
+                    updateUI();
+                    saveGame(true); // Save on purchase
+                }
+            };
+            document.getElementById('buildings-container').appendChild(el);
+            b.el = el;
+        }
+        document.getElementById('menu-btn').onclick = () => document.getElementById('modal-overlay').classList.add('visible');
+        document.getElementById('modal-close').onclick = () => document.getElementById('modal-overlay').classList.remove('visible');
+        document.getElementById('manual-save-btn').onclick = () => saveGame();
+        document.getElementById('wipe-save-btn').onclick = () => { localStorage.clear(); location.reload(); };
+    }
+
+    function updateUI() {
+        shapesDisplay.innerText = format(gameState.shapes) + " Shapes";
+        spsDisplay.innerText = format(getSPS()) + " shapes/sec";
+        for (let k in buildings) {
+            let b = buildings[k];
+            let cost = Math.floor(b.baseCost * Math.pow(1.15, b.count));
+            b.el.style.display = 'flex';
+            b.el.querySelector('.item-cost span').innerText = format(cost);
+            b.el.querySelector('.item-count').innerText = b.count;
+            b.el.classList.toggle('unaffordable', gameState.shapes < cost);
+        }
+    }
+
+    let lastTime = performance.now();
+    let saveTimer = 0;
+
+    function gameLoop(time) {
+        let delta = time - lastTime; lastTime = time;
+        let sps = getSPS();
         if (sps > 0) {
-            const gained = sps * (dt / 1000);
-            state.shapes += gained;
-            state.totalShapes += gained;
+            let gained = sps * (delta / 1000);
+            gameState.shapes += gained; gameState.totalShapes += gained;
             autoSpawnBuffer += gained;
         }
 
-        // Auto-production falling shapes (capped at 25/sec = 40ms interval)
-        if (autoSpawnBuffer >= 1) {
-            spawnShape();
-            autoSpawnBuffer--;
+        if (time - lastAutoSpawnTime >= 40 && autoSpawnBuffer >= 1) {
+            spawnFallingShape();
+            autoSpawnBuffer--; 
+            lastAutoSpawnTime = time;
+        } else if (autoSpawnBuffer > 50) {
+            autoSpawnBuffer = 50;
         }
 
-        autoSaveTicker += dt;
-        if (autoSaveTicker > 30000) { // Auto-save every 30s
-            saveGame();
-            autoSaveTicker = 0;
-        }
-
-        document.getElementById('shapes-display').innerText = Math.floor(state.shapes) + " Shapes";
-        document.getElementById('sps-display').innerText = sps.toFixed(1) + " shapes/sec";
+        saveTimer += delta;
+        if (saveTimer >= 30000) { saveGame(true); saveTimer = 0; }
         
-        requestAnimationFrame(loop);
+        updateUI();
+        requestAnimationFrame(gameLoop);
     }
 
-    // Initialize
-    loadGame();
-    requestAnimationFrame(loop);
-
+    loadGame(); initUI(); requestAnimationFrame(gameLoop);
 </script>
 </body>
 </html>
