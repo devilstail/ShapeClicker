@@ -29,6 +29,12 @@
         overflow: hidden;
     }
 
+    /* Glow Disabling Logic */
+    body.no-glow * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
     #left-panel {
         flex: 1;
         display: flex;
@@ -38,11 +44,7 @@
         position: relative;
     }
 
-    #divider {
-        width: 2px;
-        background-color: var(--border-color);
-        height: 100%;
-    }
+    #divider { width: 2px; background-color: var(--border-color); height: 100%; }
 
     #right-panel {
         width: 400px;
@@ -91,16 +93,9 @@
         z-index: 10;
     }
 
-    #main-button:hover {
-        box-shadow: 0 0 40px rgba(96, 165, 250, 0.8);
-    }
+    #main-button:hover { box-shadow: 0 0 40px rgba(96, 165, 250, 0.8); }
+    #main-button:active { transform: scale(0.92); box-shadow: 0 0 15px rgba(37, 99, 235, 0.8); }
 
-    #main-button:active {
-        transform: scale(0.92);
-        box-shadow: 0 0 15px rgba(37, 99, 235, 0.8);
-    }
-
-    /* Falling Shapes Styles */
     .falling-shape {
         position: absolute;
         pointer-events: none;
@@ -127,12 +122,7 @@
         z-index: 100;
     }
 
-    #scrollable-area {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-    }
-
+    #scrollable-area { flex: 1; overflow-y: auto; padding: 10px; }
     #scrollable-area::-webkit-scrollbar { width: 8px; }
     #scrollable-area::-webkit-scrollbar-track { background: var(--panel-bg); }
     #scrollable-area::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
@@ -154,21 +144,12 @@
         border-bottom: 1px solid var(--border-color);
     }
 
-    .control-row {
-        display: flex;
-        gap: 5px;
-    }
+    .control-row { display: flex; gap: 5px; }
 
     .mode-btn, .bulk-btn {
-        flex: 1;
-        padding: 8px;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--border-color);
-        color: var(--text-dim);
-        cursor: pointer;
-        font-weight: bold;
-        border-radius: 4px;
-        transition: all 0.2s;
+        flex: 1; padding: 8px; background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border-color); color: var(--text-dim);
+        cursor: pointer; font-weight: bold; border-radius: 4px; transition: all 0.2s;
     }
 
     .mode-btn.active-buy { background: var(--accent); color: var(--bg-color); border-color: var(--accent); }
@@ -176,50 +157,27 @@
     .bulk-btn.active { background: var(--text-main); color: var(--bg-color); }
 
     .item-card {
-        display: none;
-        align-items: center;
-        background-color: rgba(255, 255, 255, 0.03);
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        padding: 10px;
-        margin-bottom: 8px;
-        cursor: pointer;
-        transition: background-color 0.2s, border-color 0.2s, box-shadow 0.3s;
-    }
-
-    .sell-mode-active .item-card { border-color: rgba(248, 113, 113, 0.3); }
-    .sell-mode-active .item-card:hover {
-        box-shadow: 0 0 12px rgba(248, 113, 113, 0.6);
-        border-color: var(--sell-color);
+        display: none; align-items: center; background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-color); border-radius: 6px; padding: 10px;
+        margin-bottom: 8px; cursor: pointer; transition: background-color 0.2s, border-color 0.2s, box-shadow 0.3s;
     }
 
     .item-card:hover { background-color: rgba(255, 255, 255, 0.08); border-color: var(--text-dim); }
     .item-card.unaffordable { cursor: not-allowed; opacity: 0.6; }
-    .item-card.unaffordable.buy-mode:hover { background-color: rgba(255, 255, 255, 0.03); border-color: var(--border-color); box-shadow: none; }
-    .item-card.unaffordable .item-cost { color: var(--unaffordable); }
-    .item-card.affordable .item-cost { color: var(--text-main); }
-    .sell-mode-active .item-cost { color: var(--sell-color) !important; }
 
     .item-icon-container {
-        width: 40px; height: 40px;
-        display: flex; justify-content: center; align-items: center;
-        margin-right: 15px; background: rgba(0,0,0,0.2);
-        border-radius: 4px; flex-shrink: 0;
+        width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
+        margin-right: 15px; background: rgba(0,0,0,0.2); border-radius: 4px; flex-shrink: 0;
     }
 
     .item-details { flex: 1; }
     .item-name { font-weight: bold; font-size: 1.1rem; margin-bottom: 3px; }
-    .item-cost { font-size: 0.9rem; }
     .item-count { font-size: 1.5rem; font-weight: bold; color: var(--text-dim); opacity: 0.5; }
 
-    /* Shop Icons */
-    .shape-line { width: 24px; height: 4px; background: #333; box-shadow: 0 0 2px rgba(255,255,255,0.5); }
+    /* Icons */
+    .shape-line { width: 24px; height: 4px; background: #333; }
     .shape-triangle { width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 24px solid orange; }
     .shape-square { width: 20px; height: 20px; background: #3b82f6; }
-    .shape-pentagon { width: 24px; height: 24px; background: #ef4444; clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); }
-    .shape-hexagon { width: 24px; height: 24px; background: #a855f7; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }
-    .shape-heptagon { width: 24px; height: 24px; background: #ffffff; clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%); }
-    .shape-octagon { width: 24px; height: 24px; background: #dc143c; clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); }
     .shape-cursor { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid #cbd5e1; transform: rotate(-45deg); }
     .shape-star { width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 24px solid gold; position: relative; }
     .shape-star:after { content: ''; position: absolute; top: 8px; left: -12px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 24px solid gold; }
@@ -227,22 +185,16 @@
     #tooltip {
         position: fixed; background: rgba(2, 12, 27, 0.95); color: var(--text-main);
         border: 1px solid var(--accent); padding: 12px; border-radius: 6px;
-        pointer-events: none; z-index: 9999; max-width: 280px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.5); font-size: 0.9rem; display: none;
+        pointer-events: none; z-index: 9999; max-width: 280px; display: none;
     }
     
     #tooltip.visible { display: block; }
-    #tt-name { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; color: var(--accent); }
-    #tt-cost { margin-bottom: 8px; font-weight: bold; }
-    #tt-desc { margin-bottom: 8px; line-height: 1.4; }
-    #tt-quote { font-style: italic; color: var(--text-dim); border-top: 1px solid var(--border-color); padding-top: 8px; }
 
     #menu-bar { position: absolute; top: 20px; right: 20px; z-index: 10; }
     #menu-btn {
         background: transparent; color: var(--accent); border: 1px solid var(--accent);
-        padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.2s;
+        padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold;
     }
-    #menu-btn:hover { background: rgba(100, 255, 218, 0.1); }
 
     #modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -252,53 +204,33 @@
 
     #modal-content {
         background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px;
-        width: 650px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        width: 650px; max-height: 85vh; display: flex; flex-direction: column;
     }
 
     #modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border-color); }
     #modal-close { background: none; border: none; color: var(--text-dim); font-size: 1.5rem; cursor: pointer; }
-    #modal-close:hover { color: white; }
     #modal-tabs { display: flex; border-bottom: 1px solid var(--border-color); }
 
     .tab-btn { flex: 1; background: none; border: none; color: var(--text-dim); padding: 12px; cursor: pointer; font-weight: bold; }
     .tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
     #modal-body { padding: 20px; overflow-y: auto; flex: 1; }
-    .modal-list-item { display: flex; align-items: center; background: rgba(0,0,0,0.2); border-radius: 4px; padding: 12px; margin-bottom: 10px; }
-    .modal-icon-container { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); border-radius: 4px; margin-right: 15px; flex-shrink: 0; }
-    .modal-item-content { flex: 1; }
-    .modal-list-title { font-weight: bold; color: var(--accent); margin-bottom: 4px; }
-    .modal-list-desc { font-size: 0.9rem; margin-bottom: 4px; }
-    .modal-status { font-size: 0.8rem; font-weight: bold; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; height: fit-content; }
-    .modal-status.owned { color: #4ade80; background: rgba(74, 222, 128, 0.1); }
+    .setting-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 4px; }
 
     #notification-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column-reverse; gap: 10px; z-index: 9999; pointer-events: none; }
-    .notification { background: rgba(2, 12, 27, 0.95); border: 1px solid var(--accent); padding: 15px; border-radius: 8px; display: flex; align-items: center; width: 320px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); animation: slideIn 0.3s ease-out forwards; transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
-    .notification.hide { opacity: 0; transform: translateX(100%); }
+    .notification { background: rgba(2, 12, 27, 0.95); border: 1px solid var(--accent); padding: 15px; border-radius: 8px; display: flex; align-items: center; width: 320px; animation: slideIn 0.3s ease-out forwards; transition: opacity 0.5s ease-out; }
+    .notification.hide { opacity: 0; }
 
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-    .stat-line { font-size: 1.1rem; margin-bottom: 10px; }
-    .stat-line span { color: var(--accent); font-weight: bold; }
-    
-    #wipe-save-btn, #manual-save-btn { padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: background 0.2s; border: none; }
-    #wipe-save-btn { background: var(--unaffordable); color: white; margin-left: 10px; }
-    #wipe-save-btn:hover { background: #d32f2f; }
-    #manual-save-btn { background: var(--accent); color: var(--bg-color); }
-    #manual-save-btn:hover { background: #4fd1b5; }
 </style>
 </head>
 <body>
 
     <div id="left-panel">
-        <div class="panel-header" style="position:absolute; top:0; left:0; width: 100%; border-bottom: none;">Button</div>
         <div id="shapes-display">0 Shapes</div>
         <div id="sps-display">0 shapes/sec</div>
         <button id="main-button"></button>
-        
-        <div id="menu-bar">
-            <button id="menu-btn">Menu</button>
-        </div>
+        <div id="menu-bar"><button id="menu-btn">Menu</button></div>
     </div>
 
     <div id="divider"></div>
@@ -324,30 +256,37 @@
     </div>
 
     <div id="tooltip">
-        <div id="tt-name"></div>
+        <div id="tt-name" style="font-weight:bold; color:var(--accent)"></div>
         <div id="tt-cost"></div>
         <div id="tt-desc"></div>
-        <div id="tt-quote"></div>
     </div>
 
     <div id="modal-overlay">
         <div id="modal-content">
             <div id="modal-header"><h2>Game Menu</h2><button id="modal-close">&times;</button></div>
             <div id="modal-tabs">
-                <button class="tab-btn active" data-tab="upgrades-tab">Purchased Upgrades</button>
-                <button class="tab-btn" data-tab="achievements-tab">Achievements</button>
+                <button class="tab-btn active" data-tab="upgrades-tab">Upgrades</button>
                 <button class="tab-btn" data-tab="stats-tab">Stats & Settings</button>
             </div>
             <div id="modal-body">
                 <div id="upgrades-tab" class="tab-content"></div>
-                <div id="achievements-tab" class="tab-content" style="display:none;"></div>
                 <div id="stats-tab" class="tab-content" style="display:none;">
-                    <h3 style="margin-bottom: 15px; color: var(--accent);">Statistics</h3>
-                    <div class="stat-line">Total Shapes Created: <span id="stat-total-shapes">0</span></div>
-                    <div class="stat-line">Total Clicks: <span id="stat-total-clicks">0</span></div>
-                    <h3 style="margin-top: 40px; margin-bottom: 15px; color: var(--unaffordable); border-top: 1px solid var(--border-color); padding-top: 20px;">Save Management</h3>
-                    <button id="manual-save-btn">Manual Save</button>
-                    <button id="wipe-save-btn">Wipe Save</button>
+                    <h3 style="color: var(--accent); margin-bottom: 10px;">Settings</h3>
+                    <div class="setting-row">
+                        <span>Falling Shapes</span>
+                        <input type="checkbox" id="setting-particles" checked>
+                    </div>
+                    <div class="setting-row">
+                        <span>Visual Glow Effects</span>
+                        <input type="checkbox" id="setting-glow" checked>
+                    </div>
+
+                    <h3 style="color: var(--accent); margin-top: 20px; margin-bottom: 10px;">Save Management</h3>
+                    <button id="manual-save-btn" style="padding:10px; background:var(--accent); color:var(--bg-color); border:none; border-radius:4px; cursor:pointer;">Manual Save</button>
+                    <button id="wipe-save-btn" style="padding:10px; background:var(--unaffordable); color:white; border:none; border-radius:4px; cursor:pointer; margin-left:10px;">Wipe Save</button>
+                    
+                    <h3 style="color: var(--accent); margin-top: 20px; margin-bottom: 10px;">Stats</h3>
+                    <div id="stats-container"></div>
                 </div>
             </div>
         </div>
@@ -358,211 +297,153 @@
 <script>
     const gameState = { 
         shapes: 0, totalShapes: 0, clicks: 0,
-        shopMode: 'buy', bulkAmount: 1
+        shopMode: 'buy', bulkAmount: 1,
+        settings: { particles: true, glow: true }
     };
 
-    let spawnBuffer = 0;
-    let lastSpawnTimestamp = 0;
+    let autoSpawnBuffer = 0;
+    let lastAutoSpawnTime = 0;
+    let activeClickParticles = 0;
 
     const buildings = {
-        line: { id: 'line', name: 'Line', baseCost: 25, prod: 0.3, count: 0, iconClass: 'shape-line', quote: "It's just a line, what's it gonna do?", revealed: false },
-        triangle: { id: 'triangle', name: 'Triangle', baseCost: 150, prod: 1.5, count: 0, iconClass: 'shape-triangle', quote: "Three lines together, really?", revealed: false },
-        square: { id: 'square', name: 'Square', baseCost: 1100, prod: 6, count: 0, iconClass: 'shape-square', quote: "So have a square! 🟥", revealed: false },
-        pentagon: { id: 'pentagon', name: 'Pentagon', baseCost: 34000, prod: 25, count: 0, iconClass: 'shape-pentagon', quote: null, revealed: false },
-        hexagon: { id: 'hexagon', name: 'Hexagon', baseCost: 140000, prod: 110, count: 0, iconClass: 'shape-hexagon', quote: null, revealed: false },
-        heptagon: { id: 'heptagon', name: 'Heptagon', baseCost: 1300000, prod: 1400, count: 0, iconClass: 'shape-heptagon', quote: null, revealed: false },
-        octagon: { id: 'octagon', name: 'Octagon', baseCost: 29000000, prod: 20000, count: 0, iconClass: 'shape-octagon', quote: "Congratulations on reaching the end!", revealed: false }
+        line: { id: 'line', name: 'Line', baseCost: 25, prod: 0.3, count: 0, iconClass: 'shape-line', revealed: false },
+        triangle: { id: 'triangle', name: 'Triangle', baseCost: 150, prod: 1.5, count: 0, iconClass: 'shape-triangle', revealed: false },
+        square: { id: 'square', name: 'Square', baseCost: 1100, prod: 6, count: 0, iconClass: 'shape-square', revealed: false }
     };
 
     const upgrades = {
-        dup: { id: 'dup', type: 'click', name: 'Shape Duplicator', cost: 200, reqBuilding: 'line', reqCount: 3, desc: 'Double click output', bought: false, revealed: false },
-        energy: { id: 'energy', type: 'click', name: 'Energy Drink', cost: 1400, reqBuilding: 'triangle', reqCount: 3, desc: 'Double click output', bought: false, revealed: false },
-        collab: { id: 'collab', type: 'click', name: 'Collaboration', cost: 15000, reqBuilding: 'square', reqCount: 3, desc: 'Each building adds 2% click power', bought: false, revealed: false },
-        call: { id: 'call', type: 'click', name: 'Call of the Shapes', cost: 500000, reqBuilding: 'hexagon', reqCount: 3, desc: 'Triple click output', bought: false, revealed: false },
-        twoLines: { id: 'twoLines', type: 'building', target: 'line', name: 'Two Lines', cost: 150, reqBuilding: 'line', reqCount: 1, desc: 'Double Line prod', bought: false, revealed: false },
-        cardboard: { id: 'cardboard', type: 'building', target: 'triangle', name: 'Cardboard', cost: 1000, reqBuilding: 'triangle', reqCount: 1, desc: 'Double Triangle prod', bought: false, revealed: false },
-        cube: { id: 'cube', type: 'building', target: 'square', name: 'Cube', cost: 15000, reqBuilding: 'square', reqCount: 1, desc: 'Double Square prod', bought: false, revealed: false },
-        pentagram: { id: 'pentagram', type: 'building', target: 'pentagon', name: 'Pentagram', cost: 500000, reqBuilding: 'pentagon', reqCount: 1, desc: 'Double Pentagon prod', bought: false, revealed: false },
-        hexagram: { id: 'hexagram', type: 'building', target: 'hexagon', name: 'Hexagram', cost: 2000000, reqBuilding: 'hexagon', reqCount: 1, desc: 'Double Hexagon prod', bought: false, revealed: false },
-        heptagram: { id: 'heptagram', type: 'building', target: 'heptagon', name: 'Heptagram', cost: 15000000, reqBuilding: 'heptagon', reqCount: 1, desc: 'Double Heptagon prod', bought: false, revealed: false },
-        octagram: { id: 'octagram', type: 'building', target: 'octagon', name: 'Octagram', cost: 300000000, reqBuilding: 'octagon', reqCount: 1, desc: 'Double Octagon prod', bought: false, revealed: false }
+        dup: { id: 'dup', type: 'click', name: 'Duplicator', cost: 200, reqBuilding: 'line', reqCount: 3, desc: 'Double click output', bought: false, revealed: false }
     };
-
-    const achievements = [
-        { id: 'ach1', name: "It's you!", req: 1, desc: "Produce 1 total shape", unlocked: false },
-        { id: 'ach2', name: "Shape Addiction", req: 100, desc: "Produce 100 total shapes", unlocked: false },
-        { id: 'ach3', name: "The Third Dimension", req: 10000, desc: "Produce 10,000 total shapes", unlocked: false },
-        { id: 'ach4', name: "A Million shapes..", req: 1000000, desc: "Produce 1,000,000 total shapes", unlocked: false },
-        { id: 'ach5', name: "This is getting out of control", req: 100000000, desc: "Produce 100,000,000 total shapes", unlocked: false },
-        { id: 'ach6', name: "Despite everything, it's still you.", req: 10000000000, desc: "Produce 10,000,000,000 total shapes", unlocked: false }
-    ];
 
     const shapesDisplay = document.getElementById('shapes-display');
     const spsDisplay = document.getElementById('sps-display');
     const mainBtn = document.getElementById('main-button');
-    const bldContainer = document.getElementById('buildings-container');
-    const upgContainer = document.getElementById('upgrades-container');
     const tooltip = document.getElementById('tooltip');
     const notifContainer = document.getElementById('notification-container');
-    const scrollArea = document.getElementById('scrollable-area');
 
-    function format(n) { if (n < 1000) return (Math.floor(n * 10) / 10).toString(); return Math.floor(n).toLocaleString('en-US'); }
+    function format(n) { return Math.floor(n).toLocaleString(); }
 
-    function getBuildingCost(id, amount) { const b = buildings[id]; const r = 1.15; const a = b.baseCost * Math.pow(r, b.count); return Math.floor(a * (Math.pow(r, amount) - 1) / (r - 1)); }
-    function getSellValue(id, amount) { const b = buildings[id]; if (b.count < amount) return 0; const r = 1.15; const a = b.baseCost * Math.pow(r, b.count - amount); const totalCost = a * (Math.pow(r, amount) - 1) / (r - 1); return Math.floor(totalCost * 0.5); }
-    function getTotalBuildings() { let total = 0; for (let key in buildings) total += buildings[key].count; return total; }
-    function getClickPower() { let p = 1; if (upgrades.dup.bought) p *= 2; if (upgrades.energy.bought) p *= 2; if (upgrades.call.bought) p *= 3; if (upgrades.collab.bought) p *= (1 + (getTotalBuildings() * 0.02)); return p; }
-    function getSPS() { let totalSPS = 0; for (let key in buildings) { let b = buildings[key]; if (b.count === 0) continue; let multiplier = 1; for (let uKey in upgrades) { let u = upgrades[uKey]; if (u.type === 'building' && u.target === key && u.bought) multiplier *= 2; } totalSPS += (b.prod * multiplier) * b.count; } return totalSPS; }
-
-    function showToast(message) {
-        let toast = document.createElement('div');
-        toast.className = 'notification'; toast.style.width = 'auto'; toast.style.minWidth = '150px';
-        toast.innerHTML = `<div style="text-align: center; width: 100%; font-weight: bold;">${message}</div>`;
-        notifContainer.appendChild(toast);
-        setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 500); }, 3000);
+    function getSPS() {
+        let total = 0;
+        for (let k in buildings) total += buildings[k].prod * buildings[k].count;
+        return total;
     }
 
-    function saveGame(showNotif = false) {
-        let data = { shapes: gameState.shapes, totalShapes: gameState.totalShapes, clicks: gameState.clicks, shopMode: gameState.shopMode, bulkAmount: gameState.bulkAmount, b: {}, u: {}, a: achievements.map(a => a.unlocked) };
-        for (let key in buildings) data.b[key] = { c: buildings[key].count, r: buildings[key].revealed };
-        for (let key in upgrades) data.u[key] = { b: upgrades[key].bought, r: upgrades[key].revealed };
-        localStorage.setItem('shapeClickerSave', JSON.stringify(data));
-        if (showNotif) showToast("Saved game");
-    }
-
-    function loadGame() {
-        let saved = localStorage.getItem('shapeClickerSave');
-        if (saved) {
-            try {
-                let data = JSON.parse(saved);
-                gameState.shapes = data.shapes || 0; gameState.totalShapes = data.totalShapes || 0; gameState.clicks = data.clicks || 0;
-                gameState.shopMode = data.shopMode || 'buy'; gameState.bulkAmount = data.bulkAmount || 1;
-                if (data.b) { for (let key in data.b) { if (buildings[key]) { buildings[key].count = data.b[key].c || 0; buildings[key].revealed = data.b[key].r || false; } } }
-                if (data.u) { for (let key in data.u) { if (upgrades[key]) { upgrades[key].bought = data.u[key].b || false; upgrades[key].revealed = data.u[key].r || false; } } }
-                if (data.a) { data.a.forEach((unlocked, idx) => { if (achievements[idx]) achievements[idx].unlocked = unlocked; }); }
-            } catch (e) { console.error("Load failed", e); }
-        }
-    }
-
-    function notifyAchievement(ach) {
-        let notif = document.createElement('div'); notif.className = 'notification';
-        notif.innerHTML = `<div class="modal-icon-container"><div class="shape-star"></div></div><div style="flex: 1;"><div style="color: var(--accent); font-weight: bold; font-size: 0.85rem;">Achievement Unlocked!</div><div style="font-weight: bold; font-size: 1.05rem;">${ach.name}</div><div style="font-size: 0.8rem; color: var(--text-dim);">${ach.desc}</div></div>`;
-        notifContainer.appendChild(notif);
-        setTimeout(() => { notif.classList.add('hide'); setTimeout(() => notif.remove(), 500); }, 6000);
+    function showToast(msg) {
+        let t = document.createElement('div'); t.className = 'notification';
+        t.innerHTML = `<div style="text-align:center;width:100%">${msg}</div>`;
+        notifContainer.appendChild(t);
+        setTimeout(() => { t.classList.add('hide'); setTimeout(() => t.remove(), 500); }, 3000);
     }
 
     function spawnFallingShape() {
-        if (spawnBuffer < 1) return;
-        spawnBuffer--;
-
+        if (!gameState.settings.particles) return;
         const el = document.createElement('div');
         const types = ['square', 'circle', 'triangle'];
-        const type = types[Math.floor(Math.random() * types.length)];
-        el.className = `falling-shape shape-f-${type}`;
-        
+        el.className = `falling-shape shape-f-${types[Math.floor(Math.random() * 3)]}`;
         el.style.left = (Math.random() * window.innerWidth) + 'px';
         document.body.appendChild(el);
 
-        let currY = -50;
-        let rotation = 0;
-        const fallSpeed = 3 + Math.random() * 4;
-
-        function animateFall() {
-            currY += fallSpeed;
-            rotation += 0.75; // 45 degrees per second at ~60fps (45/60)
-            el.style.transform = `translateY(${currY}px) rotate(${rotation}deg)`;
-            if (currY < window.innerHeight + 60) requestAnimationFrame(animateFall);
-            else el.remove();
+        let y = -50, rot = 0;
+        const speed = 3 + Math.random() * 4;
+        function anim() {
+            y += speed; rot += 0.75; // 45 deg/sec at 60fps
+            el.style.transform = `translateY(${y}px) rotate(${rot}deg)`;
+            if (y < window.innerHeight + 50) requestAnimationFrame(anim); else el.remove();
         }
-        requestAnimationFrame(animateFall);
+        requestAnimationFrame(anim);
     }
 
-    function initUI() {
-        for (let key in buildings) {
-            let b = buildings[key]; let el = document.createElement('div');
-            el.className = 'item-card buy-mode'; el.dataset.id = key;
-            el.innerHTML = `<div class="item-icon-container"><div class="${b.iconClass}"></div></div><div class="item-details"><div class="item-name">${b.name}</div><div class="item-cost">Cost: <span>0</span></div></div><div class="item-count">0</div>`;
-            bldContainer.appendChild(el); b.element = el; b.costSpan = el.querySelector('.item-cost span'); b.countDiv = el.querySelector('.item-count');
-            el.addEventListener('click', () => { if (gameState.shopMode === 'buy') buyBuilding(key); else sellBuilding(key); });
-            setupTooltip(el, key, 'building');
+    function createClickParticle(x, y, amt) {
+        if (activeClickParticles >= 5) return; // Strict limit of 5
+        activeClickParticles++;
+
+        let el = document.createElement('div');
+        el.className = 'particle'; el.innerText = '+' + amt;
+        el.style.left = x + 'px'; el.style.top = y + 'px';
+        document.body.appendChild(el);
+
+        let vy = -5, op = 1;
+        function anim() {
+            vy += 0.2; y += vy; op -= 0.02;
+            el.style.top = y + 'px'; el.style.opacity = op;
+            if (op > 0) requestAnimationFrame(anim); 
+            else { el.remove(); activeClickParticles--; }
         }
-
-        for (let key in upgrades) {
-            let u = upgrades[key]; let el = document.createElement('div'); el.className = 'item-card';
-            let iconHTML = u.type === 'click' ? `<div class="shape-cursor"></div>` : `<div class="${buildings[u.target].iconClass}" style="transform: scale(0.8);"></div>`;
-            el.innerHTML = `<div class="item-icon-container">${iconHTML}</div><div class="item-details"><div class="item-name">${u.name}</div><div class="item-cost">Cost: <span>${format(u.cost)}</span></div></div>`;
-            upgContainer.appendChild(el); u.element = el;
-            el.addEventListener('click', () => buyUpgrade(key)); setupTooltip(el, key, 'upgrade');
-        }
-        
-        document.getElementById('buy-mode-btn').addEventListener('click', () => setShopMode('buy'));
-        document.getElementById('sell-mode-btn').addEventListener('click', () => setShopMode('sell'));
-        document.getElementById('bulk-1-btn').addEventListener('click', () => setBulk(1));
-        document.getElementById('bulk-10-btn').addEventListener('click', () => setBulk(10));
-        document.getElementById('manual-save-btn').addEventListener('click', () => saveGame(true));
-        document.getElementById('wipe-save-btn').addEventListener('click', () => { if(confirm("Wipe all progress?")) { localStorage.removeItem('shapeClickerSave'); location.reload(); } });
-        document.getElementById('menu-btn').addEventListener('click', () => { document.getElementById('modal-overlay').classList.add('visible'); updateMenus(); });
-        document.getElementById('modal-close').addEventListener('click', () => { document.getElementById('modal-overlay').classList.remove('visible'); });
-        
-        setShopMode(gameState.shopMode); setBulk(gameState.bulkAmount);
-    }
-
-    function setShopMode(m) { gameState.shopMode = m; document.getElementById('buy-mode-btn').classList.toggle('active-buy', m === 'buy'); document.getElementById('sell-mode-btn').classList.toggle('active-sell', m === 'sell'); scrollArea.classList.toggle('sell-mode-active', m === 'sell'); updateUI(true); }
-    function setBulk(a) { gameState.bulkAmount = a; document.getElementById('bulk-1-btn').classList.toggle('active', a === 1); document.getElementById('bulk-10-btn').classList.toggle('active', a === 10); updateUI(true); }
-
-    function buyBuilding(id) { let cost = getBuildingCost(id, gameState.bulkAmount); if (gameState.shapes >= cost) { gameState.shapes -= cost; buildings[id].count += gameState.bulkAmount; updateUI(true); saveGame(); } }
-    function sellBuilding(id) { let b = buildings[id]; if (b.count >= gameState.bulkAmount) { gameState.shapes += getSellValue(id, gameState.bulkAmount); b.count -= gameState.bulkAmount; updateUI(true); saveGame(); } }
-    function buyUpgrade(id) { let u = upgrades[id]; if (!u.bought && gameState.shapes >= u.cost) { gameState.shapes -= u.cost; u.bought = true; u.element.style.display = 'none'; tooltip.classList.remove('visible'); updateUI(true); saveGame(); } }
-
-    function setupTooltip(el, id, type) {
-        el.addEventListener('mouseenter', () => {
-            let data = type === 'building' ? buildings[id] : upgrades[id];
-            document.getElementById('tt-name').innerText = data.name + (gameState.bulkAmount > 1 && type === 'building' ? ` x${gameState.bulkAmount}` : '');
-            let costVal = (type === 'building') ? (gameState.shopMode === 'buy' ? getBuildingCost(id, gameState.bulkAmount) : getSellValue(id, gameState.bulkAmount)) : data.cost;
-            document.getElementById('tt-cost').innerText = `${gameState.shopMode === 'sell' && type === 'building' ? 'Value' : 'Cost'}: ${format(costVal)} Shapes`;
-            document.getElementById('tt-desc').innerText = type === 'building' ? `Produces ${format(data.prod)} shapes/sec.` : data.desc;
-            document.getElementById('tt-quote').innerText = data.quote ? `"${data.quote}"` : "";
-            tooltip.classList.add('visible');
-        });
-        el.addEventListener('mousemove', (e) => { tooltip.style.left = (e.clientX + 15) + 'px'; tooltip.style.top = (e.clientY + 15) + 'px'; });
-        el.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
-    }
-
-    mainBtn.addEventListener('mousedown', (e) => {
-        let power = getClickPower();
-        gameState.shapes += power; gameState.totalShapes += power; gameState.clicks++;
-        spawnBuffer += power;
-        createParticle(e.clientX, e.clientY, power);
-        updateUI(true);
-    });
-
-    function createParticle(x, y, amount) {
-        let el = document.createElement('div'); el.className = 'particle'; el.innerText = '+' + format(amount);
-        el.style.left = x + 'px'; el.style.top = y + 'px'; document.body.appendChild(el);
-        let vy = -5, opacity = 1;
-        function anim() { vy += 0.2; y += vy; opacity -= 0.02; el.style.top = y + 'px'; el.style.opacity = opacity; if (opacity > 0) requestAnimationFrame(anim); else el.remove(); }
         anim();
     }
 
-    function updateMenus() {
-        let upgHtml = ''; for (let k in upgrades) { if (upgrades[k].bought) upgHtml += `<div class="modal-list-item"><div class="modal-item-content"><div class="modal-list-title">${upgrades[k].name}</div><div class="modal-list-desc">${upgrades[k].desc}</div></div><span class="modal-status owned">Owned</span></div>`; }
-        document.getElementById('upgrades-tab').innerHTML = upgHtml || "None.";
-        let achHtml = ''; achievements.forEach(a => { achHtml += `<div class="modal-list-item" style="opacity:${a.unlocked?1:0.5}"><div class="modal-item-content"><div class="modal-list-title">${a.name}</div><div class="modal-list-desc">${a.desc}</div></div><span class="modal-status ${a.unlocked?'owned':''}"> ${a.unlocked?'Unlocked':'Locked'}</span></div>`; });
-        document.getElementById('achievements-tab').innerHTML = achHtml;
-        document.getElementById('stat-total-shapes').innerText = format(gameState.totalShapes);
-        document.getElementById('stat-total-clicks').innerText = format(gameState.clicks);
-    }
-
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-            btn.classList.add('active'); document.getElementById(btn.dataset.tab).style.display = 'block';
-        });
+    mainBtn.addEventListener('mousedown', (e) => {
+        let power = upgrades.dup.bought ? 2 : 1;
+        gameState.shapes += power; gameState.totalShapes += power; gameState.clicks++;
+        
+        // Manual clicks trigger shape fall immediately (no buffer backlog)
+        if (gameState.settings.particles) spawnFallingShape();
+        
+        createClickParticle(e.clientX, e.clientY, power);
+        updateUI();
     });
 
+    // Settings logic
+    document.getElementById('setting-particles').addEventListener('change', (e) => {
+        gameState.settings.particles = e.target.checked;
+        saveGame();
+    });
+
+    document.getElementById('setting-glow').addEventListener('change', (e) => {
+        gameState.settings.glow = e.target.checked;
+        document.body.classList.toggle('no-glow', !gameState.settings.glow);
+        saveGame();
+    });
+
+    function saveGame(quiet = false) {
+        localStorage.setItem('shapeSave', JSON.stringify(gameState));
+        if (!quiet) showToast("Saved game");
+    }
+
+    function loadGame() {
+        let s = localStorage.getItem('shapeSave');
+        if (s) {
+            Object.assign(gameState, JSON.parse(s));
+            document.getElementById('setting-particles').checked = gameState.settings.particles;
+            document.getElementById('setting-glow').checked = gameState.settings.glow;
+            document.body.classList.toggle('no-glow', !gameState.settings.glow);
+        }
+    }
+
+    function initUI() {
+        for (let k in buildings) {
+            let b = buildings[k];
+            let el = document.createElement('div'); el.className = 'item-card';
+            el.innerHTML = `<div class="item-icon-container"><div class="${b.iconClass}"></div></div><div class="item-details"><div class="item-name">${b.name}</div><div class="item-cost">Cost: <span>${b.baseCost}</span></div></div><div class="item-count">0</div>`;
+            el.onclick = () => {
+                let cost = Math.floor(b.baseCost * Math.pow(1.15, b.count));
+                if (gameState.shapes >= cost) { gameState.shapes -= cost; b.count++; updateUI(); }
+            };
+            document.getElementById('buildings-container').appendChild(el);
+            b.el = el;
+        }
+        document.getElementById('menu-btn').onclick = () => document.getElementById('modal-overlay').classList.add('visible');
+        document.getElementById('modal-close').onclick = () => document.getElementById('modal-overlay').classList.remove('visible');
+        document.getElementById('manual-save-btn').onclick = () => saveGame();
+        document.getElementById('wipe-save-btn').onclick = () => { localStorage.clear(); location.reload(); };
+    }
+
+    function updateUI() {
+        shapesDisplay.innerText = format(gameState.shapes) + " Shapes";
+        spsDisplay.innerText = format(getSPS()) + " shapes/sec";
+        for (let k in buildings) {
+            let b = buildings[k];
+            let cost = Math.floor(b.baseCost * Math.pow(1.15, b.count));
+            b.el.style.display = 'flex';
+            b.el.querySelector('.item-cost span').innerText = format(cost);
+            b.el.querySelector('.item-count').innerText = b.count;
+            b.el.classList.toggle('unaffordable', gameState.shapes < cost);
+        }
+    }
+
     let lastTime = performance.now();
-    let autoSaveTimer = 0;
+    let saveTimer = 0;
 
     function gameLoop(time) {
         let delta = time - lastTime; lastTime = time;
@@ -570,36 +451,24 @@
         if (sps > 0) {
             let gained = sps * (delta / 1000);
             gameState.shapes += gained; gameState.totalShapes += gained;
-            spawnBuffer += gained;
+            autoSpawnBuffer += gained;
         }
 
-        // Logic for falling shapes: Cap at 25/sec (one every 40ms)
-        if (time - lastSpawnTimestamp >= 40 && spawnBuffer >= 1) {
+        // Automatic production falling shapes logic
+        // Caps at 25 shapes per second (1 every 40ms)
+        if (time - lastAutoSpawnTime >= 40 && autoSpawnBuffer >= 1) {
             spawnFallingShape();
-            lastSpawnTimestamp = time;
+            autoSpawnBuffer--; 
+            lastAutoSpawnTime = time;
+        } else if (autoSpawnBuffer > 50) {
+            autoSpawnBuffer = 50; // Hard cap so they don't fall forever if tab was inactive
         }
 
-        achievements.forEach(a => { if (!a.unlocked && gameState.totalShapes >= a.req) { a.unlocked = true; notifyAchievement(a); saveGame(); } });
-        autoSaveTimer += delta; if (autoSaveTimer >= 60000) { saveGame(true); autoSaveTimer = 0; }
-        updateUI(false);
+        saveTimer += delta;
+        if (saveTimer >= 60000) { saveGame(); saveTimer = 0; }
+        
+        updateUI();
         requestAnimationFrame(gameLoop);
-    }
-
-    function updateUI(force) {
-        shapesDisplay.innerText = format(gameState.shapes) + " Shapes";
-        spsDisplay.innerText = format(getSPS()) + " shapes/sec";
-        let prevRev = true;
-        for (let k in buildings) {
-            let b = buildings[k]; let cost = (gameState.shopMode === 'buy') ? getBuildingCost(k, gameState.bulkAmount) : getSellValue(k, gameState.bulkAmount);
-            if (!b.revealed && (gameState.totalShapes >= b.baseCost * 0.5 || prevRev)) b.revealed = true;
-            if (b.revealed) { b.element.style.display = 'flex'; b.costSpan.innerText = format(cost); b.countDiv.innerText = b.count; b.element.className = `item-card ${gameState.shopMode === 'buy' ? (gameState.shapes >= cost ? 'affordable' : 'unaffordable') : (b.count >= gameState.bulkAmount ? 'affordable' : 'unaffordable')} ${gameState.shopMode}-mode`; }
-            if (!b.revealed) prevRev = false;
-        }
-        for (let k in upgrades) {
-            let u = upgrades[k]; if (u.bought) { u.element.style.display = 'none'; continue; }
-            if (!u.revealed && buildings[u.reqBuilding].count >= u.reqCount) u.revealed = true;
-            if (u.revealed) { u.element.style.display = 'flex'; u.element.className = `item-card ${gameState.shapes >= u.cost ? 'affordable' : 'unaffordable'}`; }
-        }
     }
 
     loadGame(); initUI(); requestAnimationFrame(gameLoop);
