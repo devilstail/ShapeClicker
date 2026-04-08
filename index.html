@@ -123,7 +123,6 @@
         letter-spacing: 1px;
     }
 
-    /* Control Buttons Styles */
     #shop-controls {
         display: flex;
         flex-direction: column;
@@ -166,7 +165,6 @@
         transition: background-color 0.2s, border-color 0.2s, box-shadow 0.3s;
     }
 
-    /* Sell Mode Visuals */
     .sell-mode-active .item-card {
         border-color: rgba(248, 113, 113, 0.3);
     }
@@ -212,7 +210,6 @@
     .item-cost { font-size: 0.9rem; }
     .item-count { font-size: 1.5rem; font-weight: bold; color: var(--text-dim); opacity: 0.5; }
 
-    /* CSS Shapes */
     .shape-line { width: 24px; height: 4px; background: #333; box-shadow: 0 0 2px rgba(255,255,255,0.5); }
     .shape-triangle { width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 24px solid orange; }
     .shape-square { width: 20px; height: 20px; background: #3b82f6; }
@@ -517,9 +514,6 @@
         return Math.floor(n).toLocaleString('en-US');
     }
 
-    /**
-     * Geometric progression sum: $S = a \cdot \frac{r^n - 1}{r - 1}$
-     */
     function getBuildingCost(id, amount) {
         const b = buildings[id];
         const r = 1.15;
@@ -568,7 +562,11 @@
 
     function saveGame() {
         let data = {
-            shapes: gameState.shapes, totalShapes: gameState.totalShapes, clicks: gameState.clicks,
+            shapes: gameState.shapes, 
+            totalShapes: gameState.totalShapes, 
+            clicks: gameState.clicks,
+            shopMode: gameState.shopMode,
+            bulkAmount: gameState.bulkAmount,
             b: {}, u: {}, a: achievements.map(a => a.unlocked)
         };
         for (let key in buildings) data.b[key] = { c: buildings[key].count, r: buildings[key].revealed };
@@ -584,19 +582,22 @@
                 gameState.shapes = data.shapes || 0;
                 gameState.totalShapes = data.totalShapes || 0;
                 gameState.clicks = data.clicks || 0;
+                gameState.shopMode = data.shopMode || 'buy';
+                gameState.bulkAmount = data.bulkAmount || 1;
+
                 if (data.b) {
                     for (let key in data.b) {
                         if (buildings[key]) {
-                            buildings[key].count = data.b[key].c;
-                            buildings[key].revealed = data.b[key].r;
+                            buildings[key].count = data.b[key].c || 0;
+                            buildings[key].revealed = data.b[key].r || false;
                         }
                     }
                 }
                 if (data.u) {
                     for (let key in data.u) {
                         if (upgrades[key]) {
-                            upgrades[key].bought = data.u[key].b;
-                            upgrades[key].revealed = data.u[key].r;
+                            upgrades[key].bought = data.u[key].b || false;
+                            upgrades[key].revealed = data.u[key].r || false;
                         }
                     }
                 }
@@ -605,7 +606,9 @@
                         if (achievements[idx]) achievements[idx].unlocked = unlocked;
                     });
                 }
-            } catch (e) { console.error("Save load failed", e); }
+            } catch (e) { 
+                console.error("Save load failed", e); 
+            }
         }
     }
 
@@ -670,12 +673,13 @@
             else if (u.bought) el.style.display = 'none';
         }
         
-        // Mode toggle handlers
         document.getElementById('buy-mode-btn').addEventListener('click', () => setShopMode('buy'));
         document.getElementById('sell-mode-btn').addEventListener('click', () => setShopMode('sell'));
         document.getElementById('bulk-1-btn').addEventListener('click', () => setBulk(1));
         document.getElementById('bulk-10-btn').addEventListener('click', () => setBulk(10));
 
+        setShopMode(gameState.shopMode);
+        setBulk(gameState.bulkAmount);
         updateMenus();
     }
 
@@ -685,6 +689,7 @@
         document.getElementById('sell-mode-btn').classList.toggle('active-sell', mode === 'sell');
         scrollArea.classList.toggle('sell-mode-active', mode === 'sell');
         updateUI(true);
+        saveGame();
     }
 
     function setBulk(amount) {
@@ -692,6 +697,7 @@
         document.getElementById('bulk-1-btn').classList.toggle('active', amount === 1);
         document.getElementById('bulk-10-btn').classList.toggle('active', amount === 10);
         updateUI(true);
+        saveGame();
     }
 
     function handleBuildingAction(id) {
@@ -705,6 +711,7 @@
             gameState.shapes -= cost;
             buildings[id].count += gameState.bulkAmount;
             updateUI(true);
+            saveGame();
         }
     }
 
@@ -715,6 +722,7 @@
             gameState.shapes += val;
             b.count -= gameState.bulkAmount;
             updateUI(true);
+            saveGame();
         }
     }
 
@@ -726,7 +734,9 @@
             u.bought = true;
             u.element.style.display = 'none';
             tooltip.classList.remove('visible');
-            updateMenus(); updateUI(true); saveGame();
+            updateMenus(); 
+            updateUI(true); 
+            saveGame();
         }
     }
 
@@ -864,30 +874,40 @@
             let b = buildings[key];
             let val = (gameState.shopMode === 'buy') ? getBuildingCost(key, gameState.bulkAmount) : getSellValue(key, gameState.bulkAmount);
             if (!b.revealed && (gameState.totalShapes >= b.baseCost * 0.5 || prevRevealed)) {
-                b.revealed = true; b.element.style.display = 'flex';
+                b.revealed = true; 
             }
             if (b.revealed) {
+                b.element.style.display = 'flex';
                 let statusClass = (gameState.shopMode === 'buy') ? (gameState.shapes >= val ? 'affordable' : 'unaffordable') : (b.count >= gameState.bulkAmount ? 'affordable' : 'unaffordable');
                 b.element.className = `item-card ${statusClass} ${gameState.shopMode}-mode`;
                 b.costSpan.innerText = format(val);
                 b.countDiv.innerText = b.count;
+            } else {
+                b.element.style.display = 'none';
             }
             if(b.count === 0 && !b.revealed) prevRevealed = false;
         }
         for (let key in upgrades) {
             let u = upgrades[key];
-            if (u.bought) continue;
+            if (u.bought) {
+                u.element.style.display = 'none';
+                continue;
+            }
             if (!u.revealed && buildings[u.reqBuilding].count >= u.reqCount) {
-                u.revealed = true; u.element.style.display = 'flex';
+                u.revealed = true; 
             }
             if (u.revealed) {
+                u.element.style.display = 'flex';
                 u.element.className = `item-card ${gameState.shapes >= u.cost && gameState.shopMode === 'buy' ? 'affordable' : 'unaffordable'}`;
+            } else {
+                u.element.style.display = 'none';
             }
         }
     }
 
     loadGame();
     initUI();
+    updateUI(true);
     requestAnimationFrame(gameLoop);
 </script>
 </body>
