@@ -74,6 +74,55 @@
         margin-bottom: 40px;
     }
 
+    /* --- Animations for the button and flares --- */
+    #button-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 300px;
+        height: 300px;
+        margin: 20px 0;
+    }
+
+    .flare-container {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: repeating-conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            transparent 5deg,
+            rgba(255, 255, 255, 0.25) 15deg,
+            transparent 25deg,
+            transparent 30deg
+        );
+        -webkit-mask-image: radial-gradient(circle, transparent 15%, black 35%, transparent 65%);
+        mask-image: radial-gradient(circle, transparent 15%, black 35%, transparent 65%);
+        /* 360deg / 90deg per sec = 4s for a full rotation */
+        animation: spinFlares 4s linear infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .button-rotator {
+        position: relative;
+        z-index: 2;
+        /* Oscilates back and forth between -60deg and 60deg */
+        animation: rockButton 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes spinFlares {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes rockButton {
+        0% { transform: rotate(-60deg); }
+        100% { transform: rotate(60deg); }
+    }
+    /* ------------------------------------------- */
+
     #main-button {
         width: 150px;
         height: 150px;
@@ -84,6 +133,8 @@
         cursor: pointer;
         transition: transform 0.05s ease, box-shadow 0.2s ease;
         outline: none;
+        position: relative;
+        z-index: 10;
     }
 
     #main-button:hover {
@@ -402,7 +453,13 @@
         <div class="panel-header" style="position:absolute; top:0; left:0; width: 100%; border-bottom: none;">Button</div>
         <div id="shapes-display">0 Shapes</div>
         <div id="sps-display">0 shapes/sec</div>
-        <button id="main-button"></button>
+        
+        <div id="button-container">
+            <div class="flare-container"></div>
+            <div class="button-rotator">
+                <button id="main-button"></button>
+            </div>
+        </div>
         
         <div id="menu-bar">
             <button id="menu-btn">Menu</button>
